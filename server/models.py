@@ -6,10 +6,17 @@ from sqlalchemy_serializer import SerializerMixin
 db = SQLAlchemy()
 
 
-class Producer(db.Model, SerializerMixin):
+class TimestampMixin:
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+    updated_at = db.Column(
+        db.DateTime, server_default=db.func.now(), server_onupdate=db.func.now()
+    )
+
+
+class Producer(db.Model, SerializerMixin, TimestampMixin):
     __tablename__ = "producers"
 
-    serialize_rules = ("-cheeses.producer",)
+    serialize_rules = ("-cheeses.producer", "-created_at", "-updated_at")
 
     id = db.Column(db.Integer, primary_key=True)
     founding_year = db.Column(db.Integer)
@@ -24,10 +31,10 @@ class Producer(db.Model, SerializerMixin):
         return f"<Producer {self.id} Name: {self.name}>"
 
 
-class Cheese(db.Model, SerializerMixin):
+class Cheese(db.Model, SerializerMixin, TimestampMixin):
     __tablename__ = "cheeses"
 
-    serialize_rules = ("-producer.cheeses",)
+    serialize_rules = ("-producer.cheeses", "-created_at", "-updated_at")
 
     id = db.Column(db.Integer, primary_key=True)
     kind = db.Column(db.String)
