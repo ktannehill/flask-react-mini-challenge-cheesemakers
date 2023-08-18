@@ -1,9 +1,20 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import MetaData
 from sqlalchemy.ext.associationproxy import association_proxy
 from sqlalchemy.orm import validates
 from sqlalchemy_serializer import SerializerMixin
 
-db = SQLAlchemy()
+convention = {
+    "ix": "ix_%(column_0_label)s",
+    "uq": "uq_%(table_name)s_%(column_0_name)s",
+    "ck": "ck_%(table_name)s_%(constraint_name)s",
+    "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
+    "pk": "pk_%(table_name)s",
+}
+
+metadata = MetaData(naming_convention=convention)
+
+db = SQLAlchemy(metadata=metadata, engine_options={"echo": True})
 
 
 class TimestampMixin:
@@ -47,3 +58,9 @@ class Cheese(db.Model, SerializerMixin, TimestampMixin):
 
     def __repr__(self):
         return f"<Cheese {self.id}>"
+
+    @validates("price")
+    def validate_price(self, key, price):
+        if not 1.00 <= price <= 45.00:
+            raise ValueError("Price must be between 1.00 and 45.00")
+        return price

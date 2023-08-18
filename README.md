@@ -222,12 +222,95 @@ the appropriate HTTP status code:
 
 ```json
 {
-  "error": "Producer not found"
+  "error": "Resource not found"
 }
 ```
 ### POST /cheeses
+This route should create a new `Cheese` that is associated with an
+existing `Producer`. It should accept an object with the following
+properties in the body of the request:
+
+```json
+{
+  "kind": "roquefort",
+  "is_raw_milk": true,
+  "production_date": "2023-08-16",
+  "image":  "https://images.pexels.com/photos/3522515/pexels-photo-3522515.jpeg?auto=compress&cs=tinysrgb&w=1600",
+  "price": 13.65,
+  "producer_id": 5
+}
+```
+If the `Cheese` is created successfully, send back a response with the data
+created `Cheese` object, along with the appropriate HTTP status code.:
+
+```json
+{
+  "id": 22,
+  "image": "https://images.pexels.com/photos/3522515/pexels-photo-3522515.jpeg?auto=compress&cs=tinysrgb&w=1600",
+  "is_raw_milk": true,
+  "kind": "roquefort",
+  "price": 13.65,
+  "producer": {
+    "name": "Anderson, Harrison and Gregory"
+  },
+  "producer_id": 5,
+  "production_date": "2023-08-16 00:00:00"
+}
+```
+If the `Cheese` is **not** created successfully, return the following JSON data,
+along with the appropriate HTTP status code:
+
+```json
+{
+  "errors": ["validation errors"]
+}
+```
 
 ### PATCH /cheeses/:id
+If the `Cheese` exists, this route should update the `Cheese` with the given data. It should accept an object with some of a `Cheese`'s properties in the body of the request:
+
+```json
+{
+  "is_raw_milk": false,
+  "production_date": "2023-08-18"
+}
+```
+If the `Cheese` is updated successfully, send back a response with the 
+created `Cheese` object only (no producer), along with the appropriate HTTP status code.:
+
+```json
+{
+  "id": 22,
+  "image": "https://images.pexels.com/photos/3522515/pexels-photo-3522515.jpeg?auto=compress&cs=tinysrgb&w=1600",
+  "is_raw_milk": false,
+  "kind": "roquefort",
+  "price": 13.65,
+  "producer_id": 5,
+  "production_date": "2023-08-18 00:00:00"
+}
+```
+
+f the `Cheese` is **not** created successfully, return the following JSON data,
+along with the appropriate HTTP status code:
+
+```json
+{
+  "errors": ["validation errors"]
+}
+```
 
 ### DELETE /cheeses/:id
 
+If the `Chese` exists, it should be removed from the database.
+
+After deleting the `Cheese`, return an _empty_ response body, along with the
+appropriate HTTP status code.
+
+If the `Cheese` does not exist, return the following JSON data, along with
+the appropriate HTTP status code:
+
+```json
+{
+  "error": "Resource not found"
+}
+```

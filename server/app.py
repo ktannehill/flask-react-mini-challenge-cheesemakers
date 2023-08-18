@@ -1,8 +1,11 @@
+from datetime import datetime
+
 from flask import Flask, jsonify, make_response, request
 from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_restful import Api, Resource
 from models import Cheese, Producer, db
+from werkzeug.exceptions import NotFound
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///app.db"
@@ -38,9 +41,78 @@ class ProducersById(Resource):
         response = make_response(jsonify(producer.to_dict()), 200)
         return response
 
+    def delete(self, id):
+        producer = Producer.query.get_or_404(id)
+        db.session.delete(producer)
+        db.session.commit()
+        response = make_response("", 204)
+        return response
+
+
+class Cheeses(Resource):
+    def post(self):
+        data = request.get_json()
+        try:
+            cheese = Cheese(
+                kind=data["kind"],
+                is_raw_milk=data["is_raw_milk"],
+                image=data["image"],
+                producer_id=data["producer_id"],
+                price=float(data["price"]),
+                production_date=datetime.strptime(data["production_date"], "%Y-%m-%d"),
+            )
+        except ValueError as e:
+            response = make_response(jsonify({"error": e.args}), 422)
+            return response
+
+        db.session.add(cheese)
+        db.session.commit()
+        response = make_response(
+            jsonify(
+                cheese.to_dict(
+                    rules=(
+                        "-producer.founding_year",
+                        "-producer.region",
+                        "-producer.operation_size",
+                        "-producer.image",
+                        "-producer.id",
+                    )
+                )
+            ),
+            201,
+        )
+        return response
+
+
+class CheesesById(Resource):
+    def patch(self, id):
+        cheese = Cheese.query.get_or_404(id)
+        data = request.get_json()
+        for key, value in data.items():
+            if key == "production_date":
+                value = datetime.strptime(value, "%Y-%m-%d")
+            setattr(cheese, key, value)
+        db.session.commit()
+        response = make_response(jsonify(cheese.to_dict(rules=("-producer",))), 200)
+        return response
+
+    def delete(self, id):
+        cheese = Cheese.query.get_or_404(id)
+        db.session.delete(cheese)
+        db.session.commit()
+        response = make_response("", 204)
+        return response
+
 
 api.add_resource(Producers, "/producers")
 api.add_resource(ProducersById, "/producers/<int:id>")
+api.add_resource(Cheeses, "/cheeses")
+api.add_resource(CheesesById, "/cheeses/<int:id>")
+
+
+@app.errorhandler(NotFound)
+def handle_not_found(error):
+    return make_response(jsonify({"error": "Resource not found"}), 404)
 
 
 if __name__ == "__main__":
