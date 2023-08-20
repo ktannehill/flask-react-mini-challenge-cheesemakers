@@ -1,26 +1,41 @@
-import { useEffect, useState } from 'react';
-import './App.css';
-
+import React from 'react';
+import {
+  ChakraProvider,
+  Box,
+  Text,
+  Link,
+  VStack,
+  Code,
+  Grid,
+  theme,
+} from '@chakra-ui/react';
+import { ColorModeSwitcher } from './ColorModeSwitcher';
+import { Logo } from './Logo';
 
 function App() {
-
-  const [producers, setProducers] = useState([])
-
-  useEffect(() => {
-    fetch('/producers')
-      .then(res => res.json())
-      .then(data => setProducers(data))
-  }, [])
-
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>CheeseBook</h1>
-        <ul>
-          {producers.map(producer => <li key={producer.id}>{producer.name}</li>)}
-        </ul>
-      </header>
-    </div>
+    <ChakraProvider theme={theme}>
+      <Box textAlign="center" fontSize="xl">
+        <Grid minH="100vh" p={3}>
+          <ColorModeSwitcher justifySelf="flex-end" />
+          <VStack spacing={8}>
+            <Logo h="40vmin" pointerEvents="none" />
+            <Text>
+              Edit <Code fontSize="xl">src/App.js</Code> and save to reload.
+            </Text>
+            <Link
+              color="teal.500"
+              href="https://chakra-ui.com"
+              fontSize="2xl"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Learn Chakra
+            </Link>
+          </VStack>
+        </Grid>
+      </Box>
+    </ChakraProvider>
   );
 }
 
