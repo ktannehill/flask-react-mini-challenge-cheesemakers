@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
 import { SimpleGrid } from '@chakra-ui/react';
 import ProducerCard from './ProducerCard';
 

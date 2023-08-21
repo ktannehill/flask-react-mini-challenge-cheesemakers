@@ -1,16 +1,16 @@
 import React from 'react';
-import { Form, Field, Formik } from 'formik';
+import { Field, Formik } from 'formik';
 import {
   Flex,
   Box,
-  VStack,      
+  VStack,
   Button,
   FormControl,
   FormLabel,
   Input,
   FormErrorMessage,
   Checkbox,
-  useColorModeValue
+  useColorModeValue,
 } from '@chakra-ui/react';
 import * as yup from 'yup';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -57,21 +57,21 @@ function CheeseForm() {
             production_date: '',
             price: '',
             image: '',
-            producer_id: id
+            producer_id: id,
           }}
           validationSchema={formSchema}
           onSubmit={values => {
-            fetch("/cheeses", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify(values, null, 2),
-              }).then((res) => {
-                if(res.ok) {
-                    navigate(`/producers/${id}`)
-                }
-              })
+            fetch('/cheeses', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(values, null, 2),
+            }).then(res => {
+              if (res.ok) {
+                navigate(`/producers/${id}`);
+              }
+            });
           }}
         >
           {({ handleSubmit, errors, touched }) => (
@@ -91,8 +91,14 @@ function CheeseForm() {
                   />
                   <FormErrorMessage>{errors.kind}</FormErrorMessage>
                 </FormControl>
-                <FormControl isInvalid={!!errors.production_date && touched.production_date}>
-                  <FormLabel htmlFor="production_date">Production Date</FormLabel>
+                <FormControl
+                  isInvalid={
+                    !!errors.production_date && touched.production_date
+                  }
+                >
+                  <FormLabel htmlFor="production_date">
+                    Production Date
+                  </FormLabel>
                   <Field
                     as={Input}
                     id="production_date"
@@ -100,15 +106,6 @@ function CheeseForm() {
                     type="text"
                     placeholder="YYYY-MM-DD"
                     variant="filled"
-                    // validate={value => {
-                    //   let error;
-
-                    //   if (value.length < 6) {
-                    //     error = 'Password must contain at least 6 characters';
-                    //   }
-
-                    //   return error;
-                    // }}
                   />
                   <FormErrorMessage>{errors.production_date}</FormErrorMessage>
                 </FormControl>

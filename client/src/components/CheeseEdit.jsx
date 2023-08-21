@@ -25,8 +25,14 @@ function CheeseEdit() {
   );
   const [selectedProducer, setSelectedProducer] = useState(null);
   const [selectedCheese, setSelectedCheese] = useState(null);
-  console.log("🚀 ~ file: CheeseEdit.jsx:28 ~ CheeseEdit ~ selectedCheese:", selectedCheese)
-  console.log("🚀 ~ file: CheeseEdit.jsx:27 ~ CheeseEdit ~ selectedProducer:", selectedProducer)
+  console.log(
+    '🚀 ~ file: CheeseEdit.jsx:28 ~ CheeseEdit ~ selectedCheese:',
+    selectedCheese
+  );
+  console.log(
+    '🚀 ~ file: CheeseEdit.jsx:27 ~ CheeseEdit ~ selectedProducer:',
+    selectedProducer
+  );
 
   useEffect(() => {
     const getProducerById = async () => {
@@ -35,14 +41,15 @@ function CheeseEdit() {
       setSelectedProducer(producer);
     };
     getProducerById();
-}, [id]);
+  }, [id]);
 
-useEffect(() => {
+  useEffect(() => {
     if (selectedProducer) {
-        const foundCheese = selectedProducer?.cheeses?.find(cheese => cheese.id == cheeseId)
-        setSelectedCheese(foundCheese);
+      const foundCheese = selectedProducer?.cheeses?.find(
+        cheese => cheese.id == cheeseId
+      );
+      setSelectedCheese(foundCheese);
     }
-
   }, [selectedProducer, cheeseId]);
 
   const formSchema = yup.object().shape({
