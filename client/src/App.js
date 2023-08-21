@@ -3,14 +3,23 @@ import {
   ChakraProvider,
   Box,
   Text,
+  Heading,
   Link,
   VStack,
+  Container,
   Code,
   Grid,
   theme,
 } from '@chakra-ui/react';
+import { 
+  Link as RouteLink,
+  Routes,
+  Route
+ } from 'react-router-dom';
 import { ColorModeSwitcher } from './ColorModeSwitcher';
-import { Logo } from './Logo';
+import Home from './components/Home';
+import ProducerDetail from './components/ProducerDetail';
+import CheeseForm from './components/CheeseForm';
 
 function App() {
   return (
@@ -19,19 +28,18 @@ function App() {
         <Grid minH="100vh" p={3}>
           <ColorModeSwitcher justifySelf="flex-end" />
           <VStack spacing={8}>
-            <Logo h="40vmin" pointerEvents="none" />
-            <Text>
-              Edit <Code fontSize="xl">src/App.js</Code> and save to reload.
-            </Text>
-            <Link
-              color="teal.500"
-              href="https://chakra-ui.com"
-              fontSize="2xl"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learn Chakra
-            </Link>
+            <Link as={RouteLink} to='/'>
+              <Heading as='h1' size='3xl'>
+                CheeseBook
+              </Heading>
+              </Link>
+           
+              <Routes>
+                <Route path='/' element={<Home />} />
+                <Route path='/producers/:id/cheeses/new' element={<CheeseForm />} />
+                <Route path='/producers/:id' element={<ProducerDetail />} />
+              </Routes>
+           
           </VStack>
         </Grid>
       </Box>
