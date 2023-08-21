@@ -16,7 +16,18 @@ function ProducerDetail() {
     getProducerById();
   }, [id]);
 
-const cheeseList = selectedProducer ? selectedProducer?.cheeses?.map((cheese) => <CheeseCard key={cheese.id} {...cheese} />) : []
+  const removeCheese = (id) => {
+    const updatedCheeses = selectedProducer.cheeses.filter((cheese) => cheese.id !== id);
+    setSelectedProducer({ ...selectedProducer, cheeses: updatedCheeses });
+  }
+
+const cheeseList = selectedProducer ? selectedProducer?.cheeses?.map((cheese) => (
+    <CheeseCard 
+      key={cheese.id} 
+      {...cheese} 
+      onDelete={removeCheese}
+    />
+)) : []
 
   if (!selectedProducer) return <Spinner size="lg" color="yellow.700" />;
 

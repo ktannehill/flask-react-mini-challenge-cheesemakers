@@ -1,32 +1,38 @@
-import { useState, useEffect } from 'react'
-import { Link as RouterLink } from 'react-router-dom'
-import {
-    SimpleGrid
-} from '@chakra-ui/react'
-import ProducerCard from './ProducerCard'
-
-
+import { useState, useEffect } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
+import { SimpleGrid } from '@chakra-ui/react';
+import ProducerCard from './ProducerCard';
 
 function Home() {
+  const [producers, setProducers] = useState([]);
 
-    const [producers, setProducers] = useState([])
+  useEffect(() => {
+    const fetchProducers = async () => {
+      const res = await fetch('/producers');
+      const producersJson = await res.json();
+      setProducers(producersJson);
+    };
+    fetchProducers();
+  }, []);
 
-    useEffect(() => {
-        const fetchProducers = async () => {
-            const res = await fetch('/producers')
-            const producersJson = await res.json()
-            setProducers(producersJson)
-        }
-        fetchProducers()
-    }, [])
-
-    const producerList = producers.map(producer => <ProducerCard key={producer.id} {...producer} />)
+  const removeProducer = id =>
+    setProducers(producers.filter(producer => producer.id !== id));
+  const producerList = producers.map(producer => (
+    <ProducerCard
+      key={producer.id}
+      {...producer}
+      onDelete={removeProducer}
+    />
+  ));
 
   return (
-    <SimpleGrid spacing={4} columns={3}>
-        {producerList}
+    <SimpleGrid
+      spacing={4}
+      columns={3}
+    >
+      {producerList}
     </SimpleGrid>
-  )
+  );
 }
 
-export default Home
+export default Home;

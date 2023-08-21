@@ -36,7 +36,7 @@ class Producer(db.Model, SerializerMixin, TimestampMixin):
     operation_size = db.Column(db.String)
     image = db.Column(db.String)
 
-    cheeses = db.relationship("Cheese", backref="producer", lazy=True)
+    cheeses = db.relationship("Cheese", backref="producer", lazy=True, cascade="delete")
 
     def __repr__(self):
         return f"<Producer {self.id} Name: {self.name}>"

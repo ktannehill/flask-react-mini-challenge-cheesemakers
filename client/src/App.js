@@ -20,6 +20,7 @@ import { ColorModeSwitcher } from './ColorModeSwitcher';
 import Home from './components/Home';
 import ProducerDetail from './components/ProducerDetail';
 import CheeseForm from './components/CheeseForm';
+import CheeseEdit from './components/CheeseEdit';
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
               <Routes>
                 <Route path='/' element={<Home />} />
                 <Route path='/producers/:id/cheeses/new' element={<CheeseForm />} />
+                <Route path='/producers/:id/cheeses/:cheeseId/edit' element={<CheeseEdit  />} />
                 <Route path='/producers/:id' element={<ProducerDetail />} />
               </Routes>
            
