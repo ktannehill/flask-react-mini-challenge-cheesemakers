@@ -53,14 +53,7 @@ class Cheeses(Resource):
     def post(self):
         data = request.get_json()
         try:
-            cheese = Cheese(
-                kind=data["kind"],
-                is_raw_milk=data["is_raw_milk"],
-                image=data["image"],
-                producer_id=data["producer_id"],
-                price=float(data["price"]),
-                production_date=datetime.strptime(data["production_date"], "%Y-%m-%d"),
-            )
+            cheese = Cheese(**data)
         except ValueError as e:
             response = make_response(jsonify({"error": e.args}), 422)
             return response

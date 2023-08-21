@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
 from sqlalchemy.ext.associationproxy import association_proxy
@@ -64,3 +66,10 @@ class Cheese(db.Model, SerializerMixin, TimestampMixin):
         if not 1.00 <= price <= 45.00:
             raise ValueError("Price must be between 1.00 and 45.00")
         return price
+
+    @validates("production_date")
+    def validate_production_date(self, key, date):
+        production_date = datetime.strptime(date, "%Y-%m-%d")
+        if production_date >= datetime.now():
+            raise ValueError("Production date must be in the past")
+        return production_date
