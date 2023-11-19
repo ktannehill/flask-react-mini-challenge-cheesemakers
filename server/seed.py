@@ -80,6 +80,7 @@ def seed_cheeses():
             producer_id=rc(Producer.query.all()).id,
             image=rc(CHEESE_IMAGE_URLS),
             is_raw_milk=fake.boolean(),
+            # is_raw_milk=rc([True, False]),
             production_date=fake.date_between(start_date="-5y", end_date="today"),
         )
         db.session.add(cheese)
